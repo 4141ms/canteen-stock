@@ -34,10 +34,7 @@
     methods: {
         getJson: function (){
             let that = this
-            this.$axios.request({
-                    url:that.$url + "show_menu",
-                    method:"GET"
-                }).then(function(ret){
+            this.Request.get("show_menu/").then(function(ret){
                 //ajax请求发送成功后获取的请求
                     console.log(ret.data);
                     that.menus = ret.data.menus;

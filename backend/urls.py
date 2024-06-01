@@ -3,7 +3,13 @@ from backend import views
 
 urlpatterns = [#匹配url时，从上往下查找，找到第一个后停止
     # 显示菜单视图
-    path("show_menu", views.showMenu, name="show_menu"),
+    path("show_menu/", views.showMenu, name="show_menu"),
+    # 登录界面
+    path("login/", views.login, name="login"),
+    # 注册界面
+    path("register/", views.register, name="register"),
+    # 测试接口
+    path("test/", views.test1, name="test"),
     # # 详情视图
     # path("<int:id>", views.student),
     # path("search/", views.StudentSearchView.as_view()),

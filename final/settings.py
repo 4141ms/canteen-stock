@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-4@v!mevto+(rvl7t4^klq0t66!w-u@4w27jevjfp6_5^=nw=+%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -43,15 +43,36 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    'corsheaders.middleware.CorsMiddleware',
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
+    # "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8080/*",
+    "http://127.0.0.1:8080/*",
+]
+
+CORS_ALLOW_HEADERS = (
+    "accept",
+    "authorization",
+    "content-type",
+    "user-agent",
+    "x-csrftoken",
+    "csrftoken",
+    "x-requested-with",
+)
+
 
 ROOT_URLCONF = "final.urls"
 
@@ -144,5 +165,3 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "frontend/dist/static"),
 ]
-
-CORS_ORIGIN_ALLOW_ALL = True
