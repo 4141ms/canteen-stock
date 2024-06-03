@@ -11,7 +11,7 @@
 
     <div style="height: 60px; line-height: 60px; text-align: center">
       <img src="../assets/logo03.png" alt="" style="width: 30px; position: relative; top: 10px; margin-right: 5px ">
-      <b style="color: white" v-show="logoTextShow">温室大棚管理系统</b>
+      <b style="color: white" v-show="logoTextShow">餐厅补货管理系统</b>
     </div>
 
     <div v-for="item in menus" :key="item.id">

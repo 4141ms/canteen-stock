@@ -8,6 +8,8 @@ urlpatterns = [#匹配url时，从上往下查找，找到第一个后停止
     path("login/", views.login, name="login"),
     # 注册界面
     path("register/", views.register, name="register"),
+    # 根据id返回用户信息
+    path("<int:id>-userInfo/", views.getUserById, name="userInfo"),
     # 测试接口
     path("test/", views.test1, name="test"),
     # # 详情视图

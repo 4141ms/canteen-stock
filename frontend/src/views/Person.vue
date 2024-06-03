@@ -14,18 +14,18 @@
       <el-form-item label="用户名">
         <el-input v-model="form.username" disabled autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="昵称">
+      <!-- <el-form-item label="昵称">
         <el-input v-model="form.nickname" autocomplete="off"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="邮箱">
         <el-input v-model="form.email" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="电话">
         <el-input v-model="form.phone" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="地址">
+      <!-- <el-form-item label="地址">
         <el-input type="textarea" v-model="form.address" autocomplete="off"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" @click="save">确 定</el-button>
       </el-form-item>

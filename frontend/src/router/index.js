@@ -47,7 +47,7 @@ export const setRoutes = () => {
     if (!currentRouteNames.includes('Manage')) {
 
       //拼装动态路由
-      const manageRoute = { path: '/', name: "Manage", component: () => import('../views/Manage.vue'), redirect: "/home", children: [
+      const manageRoute = { path: '/', name: "Manage", component: () => import('../views/Manage.vue'), redirect: '/home', children: [
           { path: 'person', name: '个人信息', component: () => import('../views/Person.vue') },
         ]}
       const menus = JSON.parse(storeMenus)

@@ -41,6 +41,7 @@ def login(request):
             if user:
                 userInfo = UserInfo.objects.filter(user=user).first()
                 reUser = {
+                    "id": user.id,
                     "username": user.username,
                     "email": user.email,
                     "avatar_url": userInfo.avatar_url
@@ -105,6 +106,27 @@ def register(request):
                 "msg": '用户创建失败'
             })
 
+# 更新用户信息 fyt
+def updateUserInfo(request):
+    response = {}
+    # 除了基本信息还有头像（可以先不考虑）
+
+    return JsonResponse(response)
+
+# 根据用户id获取用户信息 fyt
+def getUserById(request, id):
+    response = {}
+    
+    return JsonResponse(response)
+ 
+# 显示角色列表 fyt
+def showRole(request):
+    response = {}
+    
+    return JsonResponse(response)
+
+
+
 # @csrf_exempt
 def test1(request):
     response = {}
@@ -117,3 +139,5 @@ def test1(request):
                 'code': 403,
                 "msg": '测试接口'
             })
+
+

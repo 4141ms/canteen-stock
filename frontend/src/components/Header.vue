@@ -34,7 +34,7 @@ export default {
     collapseBtnClass: String,
     collapse: Function,
     pathName: String,
-    user: Object
+    // user: Object
   },
   computed: {
     currentPathName () {
@@ -43,12 +43,12 @@ export default {
   },
   watch: {  //百度搜索出的结果，监听路由变化
     currentPathName (newVal, oldVel) {
-      // console.log(newVal)
+      console.log(newVal)
     }
   },
-  // data: ()=>({
-  //   user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
-  // }),
+  data: ()=>({
+    user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
+  }),
   methods: {
     logout() {
       this.$store.commit("logout")
