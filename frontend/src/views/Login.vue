@@ -21,7 +21,9 @@
 </template>
 
 <script>
-// import {setRoutes} from "@/router";
+import store from '../store';
+
+import {setRoutes} from "@/router";
 
 export default {
   name: "Login",
@@ -43,38 +45,25 @@ export default {
       this.$refs['userForm'].validate((valid) => {
         if (valid) {  //表单校验合法
           this.Request.post("login/", this.user).then(res => {
-            console.log(res.data)
-            if (res.code === '200') {
-              localStorage.setItem("user", JSON.stringify(res.data))  //存储用户信息到浏览器
+            // console.log(res.data)
+            if (res.data.code === 200) {
+              // store.commit("clear")
+              localStorage.setItem("user", JSON.stringify(res.data.user))  //存储用户信息到浏览器
               localStorage.setItem("menus", JSON.stringify(res.data.menus))  //存储用户管理的菜单信息到浏览器
               localStorage.setItem("role", res.data["role"])
               this.$message.success("登录成功")
 
-            //   //动态设置当前用户的路由
-            //   // setRoutes()
-              this.$router.push("/menu")
+              //动态设置当前用户的路由
+              setRoutes()
+              console.log("login", this.$router.getRoutes());
+              this.$router.push("/home")
             } else {
               this.$message.error(res.msg)
             }
           }).catch(function(ret){
                 //失败或者异常之后的内容
-                console.log(ret)
+                console.log("登录失败")
           })
-
-          // this.Request.post("/user/login", this.user).then(res => {
-          //   if (res.code === '200') {
-          //     localStorage.setItem("user", JSON.stringify(res.data))  //存储用户信息到浏览器
-          //     localStorage.setItem("menus", JSON.stringify(res.data.menus))  //存储用户管理的菜单信息到浏览器
-          //     localStorage.setItem("role", res.data["role"])
-          //     this.$message.success("登录成功")
-
-          //     //动态设置当前用户的路由
-          //     setRoutes()
-          //     this.$router.push("/")
-          //   } else {
-          //     this.$message.error(res.msg)
-          //   }
-          // })
 
         }
       });
