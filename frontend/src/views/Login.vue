@@ -52,7 +52,7 @@ export default {
 
             //   //动态设置当前用户的路由
             //   // setRoutes()
-              this.$router.push("/menu")
+              this.$router.push("/")
             } else {
               this.$message.error(res.msg)
             }
