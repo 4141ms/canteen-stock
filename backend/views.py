@@ -45,12 +45,20 @@ def login(request):
                     "email": user.email,
                     "avatar_url": userInfo.avatar_url
                 }
+                menus = []
                 role = userInfo.role
-                sysMenus = role.sys_menus.all()
+                for menu in role.sys_menus.all():
+                    tmp = {
+                        "id": menu.pk,
+                        "name": menu.name,
+                        "path": menu.path
+                    }
+                    menus.append(tmp)
+                
                 response["code"] = 200
                 response["user"] = reUser
                 response["role"] = role.flag
-                response["menus"] = json.loads(serializers.serialize("json", sysMenus))
+                response["menus"] = menus
                 return JsonResponse(response)
             else:
                 return JsonResponse({

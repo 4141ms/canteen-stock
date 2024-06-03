@@ -6,6 +6,7 @@
         prop="id"
         label="编号"
         min-width="100">
+        这是order组件
         <template scope="scope"> {{ scope.row.pk }}</template>
       </el-table-column>
       <el-table-column
@@ -25,7 +26,7 @@
   
   <script>
   export default {
-    name: 'Menu',
+    name: 'Order',
     data () {
       return {
         menus: []

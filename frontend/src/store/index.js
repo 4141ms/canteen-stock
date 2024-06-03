@@ -20,8 +20,13 @@ const store = new Vuex.Store({
             router.push("/login")
 
             //重置路由
-            // resetRouter()
+            resetRouter()
 
+        },
+        clear: ()=>{
+            localStorage.removeItem("user")
+            localStorage.removeItem("menus")
+            localStorage.removeItem("role")
         }
     }
 })
