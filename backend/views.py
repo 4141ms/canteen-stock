@@ -126,7 +126,6 @@ def showRole(request):
     return JsonResponse(response)
 
 
-
 # @csrf_exempt
 def test1(request):
     response = {}
