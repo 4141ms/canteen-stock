@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from "@/store";
-import HomeView from '../views/Manage.vue'
 
 Vue.use(VueRouter)
 
@@ -69,8 +68,6 @@ export const setRoutes = () => {
       })
       //动态添加到现在的路由对象中去
       router.addRoute(manageRoute)
-      console.log("router.addRoute(manageRoute):" ,manageRoute);
-      console.log("router.getRoutes():", router.getRoutes());
     }
 
   }

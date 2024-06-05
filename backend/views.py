@@ -126,6 +126,12 @@ def showRole(request):
     return JsonResponse(response)
 
 
+# 修改菜单
+def editMenu(request):
+    response = {}
+    
+    return JsonResponse(response)
+
 # @csrf_exempt
 def test1(request):
     response = {}
