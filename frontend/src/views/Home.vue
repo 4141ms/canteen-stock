@@ -13,7 +13,7 @@
       </el-col>
       <el-col :span="6">
         <el-card style="color: #f56c6c">
-          <div><i class="el-icon-money" />教师总数</div>
+          <div><i class="el-icon-money" />管理员总数</div>
           <div style="padding: 10px 0; text-align: center; font-weight: bold">
             {{teacherNum}}
           </div>
@@ -21,7 +21,7 @@
       </el-col>
       <el-col :span="6">
         <el-card style="color: #67C23A">
-          <div><i class="el-icon-bank-card" />学生总数</div>
+          <div><i class="el-icon-bank-card" />顾客总数</div>
           <div style="padding: 10px 0; text-align: center; font-weight: bold">
             {{studentNum}}
           </div>

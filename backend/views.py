@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-from backend.models import Menu, UserInfo, User, Role, SysMenu
+from backend.models import Menu, UserInfo, User, Role, SysMenu, Menu2Stock2Number, Stock
 from django.http import JsonResponse
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
@@ -13,8 +13,26 @@ import json
 def showMenu(request):
     response = {}
 
-    menus = Menu.objects.all()
-    response['menus'] = json.loads(serializers.serialize("json", menus))
+    # menus = Menu.objects.all()
+    menus = []
+    for menu in Menu.objects.all():
+        raws = []
+        for raw in Menu2Stock2Number.objects.filter(menu=menu):
+            t = {
+                "raw_id": raw.id,
+                "name": raw.stock.name,
+                "number": raw.number
+            }
+            raws.append(t)
+        tmp = {
+                "id": menu.id,
+                "name": menu.name,
+                "price": menu.price,
+                "raw": raws
+            }
+        menus.append(tmp)
+    response['menus'] = menus
+    # response['menus'] = json.loads(serializers.serialize("json", menus))
     
     return JsonResponse(response)
 
@@ -41,7 +59,7 @@ def login(request):
             if user:
                 userInfo = UserInfo.objects.filter(user=user).first()
                 reUser = {
-                    "id": user.id,
+                    "id": userInfo.id,
                     "username": user.username,
                     "email": user.email,
                     "avatar_url": userInfo.avatar_url

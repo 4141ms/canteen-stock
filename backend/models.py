@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-# 菜单
+# 菜品
 class Menu(models.Model):
     name = models.CharField(max_length=128)
     price = models.IntegerField()
@@ -27,3 +27,16 @@ class UserInfo(models.Model):
     # 对应角色表里的flag
     role = models.ForeignKey("Role", on_delete=models.CASCADE)
     avatar_url = models.CharField(max_length=128)
+
+# 库存信息
+class Stock(models.Model):
+    name = models.CharField(max_length=128)
+    number = models.IntegerField()
+    price = models.IntegerField()
+
+# 菜品、库存数量关联表
+class Menu2Stock2Number(models.Model):
+    number = models.IntegerField()
+    menu = models.ForeignKey("Menu", on_delete=models.CASCADE)
+    stock = models.ForeignKey("Stock", on_delete=models.CASCADE)
+
