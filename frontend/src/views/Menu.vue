@@ -17,7 +17,7 @@
 
     <el-table :data="menus" style="width: 100%" row-key="id">
       <el-table-column prop="id" label="编号" width="100">
-        <template scope="scope"> {{ scope.row.id }}</template>
+        <template scope="scope"> {{ scope.row.index }}</template>
       </el-table-column>
       <el-table-column prop="name" label="菜名" min-width="100">
         <template scope="scope"> {{ scope.row.name }}</template>
@@ -47,10 +47,10 @@
         <el-form-item label="原料">
           <el-button type="primary" @click="editRaw(form.raw)">编辑</el-button>
           <el-table :data="form.raw" style="width: 100%" row-key="raw_id">
-            <el-table-column prop="name" label="原料" min-width="100">
+            <el-table-column prop="name" label="原料" min-width="50">
               <template scope="scope"> {{ scope.row.name }}</template>
             </el-table-column>
-            <el-table-column prop="price" label="数量(份)" width="100">
+            <el-table-column prop="price" label="需要数量(份)" width="100">
               <template scope="scope"> {{ scope.row.number }}</template>
             </el-table-column>
           </el-table>
@@ -66,33 +66,32 @@
     <el-dialog title="管理原料" :visible.sync="dialogRawVisible" width="25%">
       <!-- 动态表单 -->
       <el-form :model="rawFrom" ref="rawFrom" label-width="80px" class="demo-dynamic">
-      
-      <el-form-item v-for="(raw, index) in rawFrom.raws" label="原料:" :key="index">
-        <el-row :gutter="10">
-          <el-col :span="10">
-            <el-select v-model="raw.name">
-              <el-option
-                v-for="item in options"
-                :key="item.id"
-                :label="item.name"
-                :value="item.name">
-              </el-option>
-            </el-select>
-          </el-col>
-          <el-col :span="6">
-            <el-input  type="number" v-model="raw.number"></el-input>
-          </el-col>
-          <el-button @click.prevent="removeRaw(raw)">删除</el-button>
-        </el-row>
-        
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="addRaw">新增原料</el-button>
-        <el-button @click="resetForm('rawFrom')">重置</el-button>
-        <el-button type="primary" @click="submitForm('rawFrom')">确认</el-button>
-        <el-button @click="dialogRawVisible = false">取 消</el-button>
-      </el-form-item>
-    </el-form>
+
+        <el-form-item v-for="(raw, index) in rawFrom.raws" label="原料:" :key="raw.raw_id">
+          <el-row :gutter="10">
+            <el-col :span="10">
+              <el-select v-model="raw.name">
+                <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.name">
+                </el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="6">
+              <el-input type="number" v-model="raw.number" min=1></el-input>
+            </el-col>
+            <el-popconfirm class="ml-5" confirm-button-text='确定' cancel-button-text='我再想想' icon="el-icon-info"
+              icon-color="red" title="您确定删除这条数据吗？" @confirm="removeRaw(raw)">
+              <el-button type="danger" slot="reference">删除<i class="el-icon-remove-outline"></i></el-button>
+            </el-popconfirm>
+          </el-row>
+
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="addRaw">新增原料</el-button>
+          <el-button @click="resetForm('rawFrom')">重置</el-button>
+          <el-button type="primary" @click="submitForm('rawFrom')">确认</el-button>
+          <el-button @click="dialogRawVisible = false">取 消</el-button>
+        </el-form-item>
+      </el-form>
     </el-dialog>
 
   </div>
@@ -110,19 +109,16 @@ export default {
       dialogRawVisible: false,
       rawFrom: {
         raws: [{
-          value: '',
+          raw_id: 0,
+          name: '',
           number: 1
         }],
       },
-      options:[
+      options: [
         {
-          id:1,
+          id: 1,
           name: "牛肉",
         },
-        {
-          id:2,
-          name:"米"
-        }
       ]
     }
   },
@@ -144,7 +140,16 @@ export default {
       this.dialogFormVisible = true
     },
     save: function () {
-
+      console.log("save", this.form);
+      this.Request.post("edit_menu/", this.form).then(res => {
+        if (res.data.code === 200) {
+          this.getJson()
+          this.dialogFormVisible = false
+          this.$message.success("修改成功！")
+        } else {
+          this.$message.error("修改失败！")
+        }
+      })
     },
     handleEdit(row) {
       this.form = Object.assign({}, row)
@@ -152,51 +157,93 @@ export default {
       this.dialogFormVisible = true
     },
     del(id) {
-      console.log("删除");
-      // this.Request.delete("/menu/"+ id).then(res => {
-      //   if(res.code == '200') {
-      //     this.$message.success("删除成功！")
-      //     this.load()
-      //   } else {
-      //     this.$message.error("删除失败！")
-      //   }
-      // })
+      let that = this
+      this.Request.post("del_menu/", id).then(function (res) {
+        if (res.data.code === 200) {
+          that.$message.success("删除成功！")
+          that.getJson()
+        } else {
+          that.$message.error("删除失败！")
+        }
+
+      }).catch(function (ret) {
+        //失败或者异常之后的内容
+        console.log(ret)
+      })
     },
-    editRaw: function (row){
+    editRaw: function (row) {
       this.rawFrom.raws = Object.assign([], row)
       this.dialogRawVisible = true
     },
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert('submit!');
+      let form = {
+        id: this.form.id,
+        raws: this.rawFrom.raws
+      }
+      if (this.form.id ===undefined){
+        this.dialogRawVisible=false
+        this.form.raw = this.rawFrom.raws
+        return
+      }
+      let that = this
+      this.Request.post("edit_menu_raw/", form).then(res => {
+        if (res.data.code === 200) {
+          that.form.raw = res.data.data.raws
+          this.$message.success("修改成功！")
+          that.dialogRawVisible = false
         } else {
-          console.log('error submit!!');
-          return false;
+          this.$message.error("修改失败！")
         }
-      });
+      })
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
     removeRaw(item) {
-      var index = this.rawFrom.raws.indexOf(item)
-      if (index !== -1) {
-        this.rawFrom.raws.splice(index, 1)
-      }
+      let that = this
+      this.Request.post("del_menu_raw/", item.raw_id).then(function (res) {
+        if (res.data.code === 200) {
+          that.$message.success("删除成功！")
+          var index = that.rawFrom.raws.indexOf(item)
+          if (index !== -1) {
+            that.rawFrom.raws.splice(index, 1)
+          }
+          that.form.raw = that.rawFrom.raws
+        } else {
+          that.$message.error("删除失败！")
+        }
+
+
+      }).catch(function (ret) {
+        //失败或者异常之后的内容
+        console.log(ret)
+      })
+
     },
     addRaw() {
       this.rawFrom.raws.push({
-        value: '',
-        key: Date.now()
+        number: 1,
+        key: Date.now(),
       });
     },
-    getRawOption(){
+    getRawOption() {
+      let that = this
+      this.Request.get("raw_set/").then(function (ret) {
+        //ajax请求发送成功后获取的请求
+        that.options = ret.data.options;
+        return ret.options;
 
+      }).catch(function (ret) {
+        //失败或者异常之后的内容
+        console.log(ret)
+      })
     }
   },
-  created() {
+
+  mounted() {
     this.getJson();
+  },
+  created() {
     // 获取原料列表
     this.getRawOption();
   }

@@ -9,33 +9,6 @@ import json
 
 # Create your views here.
 
-#展示菜单
-def showMenu(request):
-    response = {}
-
-    # menus = Menu.objects.all()
-    menus = []
-    for menu in Menu.objects.all():
-        raws = []
-        for raw in Menu2Stock2Number.objects.filter(menu=menu):
-            t = {
-                "raw_id": raw.id,
-                "name": raw.stock.name,
-                "number": raw.number
-            }
-            raws.append(t)
-        tmp = {
-                "id": menu.id,
-                "name": menu.name,
-                "price": menu.price,
-                "raw": raws
-            }
-        menus.append(tmp)
-    response['menus'] = menus
-    # response['menus'] = json.loads(serializers.serialize("json", menus))
-    
-    return JsonResponse(response)
-
 # 登录界面
 @csrf_exempt
 def login(request):
@@ -143,23 +116,154 @@ def showRole(request):
     
     return JsonResponse(response)
 
-
-# 修改菜单
-def editMenu(request):
+#展示菜单
+def showMenu(request):
     response = {}
+
+    # menus = Menu.objects.all()
+    menus = []
+    index = 0
+    for menu in Menu.objects.all():
+        index = index+1
+        raws = []
+        for raw in Menu2Stock2Number.objects.filter(menu=menu):
+            t = {
+                "raw_id": raw.id,
+                "name": raw.stock.name,
+                "number": raw.number
+            }
+            raws.append(t)
+        tmp = {
+                "id": menu.id,
+                "index": index,
+                "name": menu.name,
+                "price": menu.price,
+                "raw": raws
+            }
+        menus.append(tmp)
+    response['menus'] = menus
+    # response['menus'] = json.loads(serializers.serialize("json", menus))
     
     return JsonResponse(response)
 
+# 传递库存列表
+def rawOptionSet(request):
+    response = {}
+    options = []
+    for raw in Stock.objects.all():
+        tmp = {
+            "id": raw.id,
+            "name": raw.name
+        }
+        options.append(tmp)
+    response['options']=options
+    return JsonResponse(response)
+
+# 修改菜品对应的原材料 
+def editMenuToRaw(request):
+    if request.method == "POST":
+        # 数据在request.body里
+        try:
+            data = request.body.decode("utf-8")
+            json_data = json.loads(data)
+        except json.decoder.JSONDecodeError:
+            return JsonResponse({
+                    'code': 403,
+                    "msg": '注册失败'
+                })
+        menu_id =  json_data.get("id")
+        for raw in json_data.get("raws"):
+            if 'raw_id' in raw.keys():
+                raw_id = raw['raw_id']
+                m2s = Menu2Stock2Number.objects.get(id=raw_id)
+                stock = Stock.objects.get(name=raw['name'])
+                m2s.number = raw['number']
+                m2s.stock = stock
+                m2s.save()
+            else:
+                menu = Menu.objects.get(id=menu_id)
+                stock = Stock.objects.get(name=raw['name'])
+                m2s = Menu2Stock2Number(menu=menu, stock=stock,number=raw['number'])
+                m2s.save()
+                raw['raw_id'] = m2s.id
+        return JsonResponse({
+                'code': 200,
+                "msg": '修改成功',
+                "data": json_data
+        })
+    
+# 删除菜单对应的原材料
+def delMenuToRaw(request):
+    if request.method == "POST":
+        try:
+            data = request.body.decode("utf-8")
+            json_data = json.loads(data)
+            
+        except:
+            return JsonResponse({
+                'code': 403,
+                "msg": '删除失败'
+            })
+        m2s = Menu2Stock2Number.objects.get(id=json_data)
+        m2s.delete()
+        return JsonResponse({
+            'code': 200,
+            "msg": '删除成功'
+        })
+    
+# 修改菜单
+def editMenu(request):
+    if request.method == "POST":
+        try:
+            data = request.body.decode("utf-8")
+            json_data = json.loads(data)
+            if "id" in json_data.keys():
+                menu_id =  json_data.get("id")
+                menu = Menu.objects.get(id=menu_id)
+                menu.name = json_data.get("name")
+                menu.price = json_data.get("price")
+                menu.save()
+            else:
+                menu = Menu(name=json_data.get("name"), price=json_data.get("price"))
+                menu.save()
+                for raw in json_data.get("raw"):
+                    stock = Stock.objects.get(name=raw['name'])
+                    m2s = Menu2Stock2Number(menu=menu, stock=stock,number=raw['number'])
+                    m2s.save()
+        except json.decoder.JSONDecodeError:
+            return JsonResponse({
+                    'code': 403,
+                    "msg": '菜单修改失败'
+                })
+    return JsonResponse({
+                    'code': 200,
+                    "msg": '菜单修改成功'
+                })
+
+def delMenu(request):
+    if request.method == "POST":
+        try:
+            data = request.body.decode("utf-8")
+            json_data = json.loads(data)
+            
+        except:
+            return JsonResponse({
+                'code': 403,
+                "msg": '删除失败'
+            })
+        menu = Menu.objects.get(id=json_data)
+        menu.delete()
+        return JsonResponse({
+            'code': 200,
+            "msg": '删除成功'
+        })
 # @csrf_exempt
 def test1(request):
     response = {}
-    # user=User.objects.get(id=3)
-    # role = Role.objects.filter(flag="CUSTOMER").first()
-    # userInfo = UserInfo(user=user, role=role)
-    # userInfo.save()
-    # print(UserInfo.objects.get(id=4).user.username)
+    m2s = Menu2Stock2Number.objects.get(id=1)
+    print(m2s.stock.name, m2s.number)
     return JsonResponse({
-                'code': 403,
+                'code': 200,
                 "msg": '测试接口'
             })
 
