@@ -55,7 +55,7 @@ export default {
 
               //动态设置当前用户的路由
               setRoutes()
-              console.log("login", this.$router.getRoutes());
+              // console.log("login", this.$router.getRoutes());
               this.$router.push("/")
             } else {
               this.$message.error(res.msg)

@@ -23,6 +23,12 @@ urlpatterns = [#匹配url时，从上往下查找，找到第一个后停止
     # 删除菜品
     path("del_menu/", views.delMenu, name="delMenu"),
     
+    # 上传用户头像
+    path("load_ava/", views.getUserProfiles, name="getUserProfiles"),
+    # 获取用户头像
+    path("download_ava/<str:path>/", views.downloadAva, name="downloadAva"),
+    
+
     # 测试接口
     path("test/", views.test1, name="test"),
 

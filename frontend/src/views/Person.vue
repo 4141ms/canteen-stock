@@ -3,11 +3,11 @@
     <el-form label-width="80px" size="small">
       <el-upload
           class="avatar-uploader"
-          action="http://localhost:9090/file/upload"
+          action="http://localhost:8000/backend/load_ava/"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
       >
-        <img v-if="form.avatarUrl" :src="form.avatarUrl" class="avatar">
+        <img v-if="form.avatar_url" :src="form.avatar_url" class="avatar">
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
 
@@ -44,11 +44,15 @@ export default {
     // this.getUser().then(res => {
     //   this.form = res
     // });
+    console.log("user", this.user);
+    this.form = this.user
   },
   methods: {
     // async getUser() {
+      // 保存更新过信息后，需要重新请求一下数据
     //   return (await this.Request.get("/user/username/" + this.user.username)).data
     // },
+
     save() {
       // this.Request.post("/user", this.form).then(res => {
       //   if(res.code === '200') {
@@ -67,7 +71,7 @@ export default {
       // })
     },
     handleAvatarSuccess(res) {
-      this.form.avatarUrl = res;
+      this.form.avatar_url = res;
     }
   }
 }

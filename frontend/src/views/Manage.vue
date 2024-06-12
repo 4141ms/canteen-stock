@@ -55,7 +55,7 @@ export default {
       let username = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).username : ""
       //从后台获取数据
       this.user = JSON.parse(localStorage.getItem("user"))
-      console.log("Manage:", this.user);
+      // console.log("Manage:", this.user);
       // this.Request.get("/user/username/" + username).then(res => {
       //   //重新赋值后台的最新User数据
       //   this.user = res.data

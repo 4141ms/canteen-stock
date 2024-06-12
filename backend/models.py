@@ -26,6 +26,7 @@ class UserInfo(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     # 对应角色表里的flag
     role = models.ForeignKey("Role", on_delete=models.CASCADE)
+    phone = models.CharField(max_length=128, default='')
     avatar_url = models.CharField(max_length=128)
 
 # 库存信息

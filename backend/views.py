@@ -1,12 +1,21 @@
 from django.shortcuts import render
 from django.views import View
 from backend.models import Menu, UserInfo, User, Role, SysMenu, Menu2Stock2Number, Stock
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 import json
+import os
+import uuid
+from urllib.parse import unquote
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# 生成8位uuid
+def generate_unique_id():
+    unique_id = uuid.uuid4().hex[:8]
+    return unique_id
 # Create your views here.
 
 # 登录界面
@@ -35,7 +44,8 @@ def login(request):
                     "id": userInfo.id,
                     "username": user.username,
                     "email": user.email,
-                    "avatar_url": userInfo.avatar_url
+                    "avatar_url": userInfo.avatar_url,
+                    'phone': userInfo.phone
                 }
                 menus = []
                 role = userInfo.role
@@ -51,7 +61,7 @@ def login(request):
                 response["user"] = reUser
                 response["role"] = role.flag
                 response["menus"] = menus
-                return JsonResponse(response)
+                return JsonResponse(response, json_dumps_params={'ensure_ascii':False})
             else:
                 return JsonResponse({
                     'code': 403,
@@ -240,6 +250,7 @@ def editMenu(request):
                     "msg": '菜单修改成功'
                 })
 
+# 删除菜单
 def delMenu(request):
     if request.method == "POST":
         try:
@@ -257,6 +268,39 @@ def delMenu(request):
             'code': 200,
             "msg": '删除成功'
         })
+    
+# 上传图片
+def getUserProfiles(request):
+  
+  if request.method == 'POST':
+    if request.FILES:
+      myFile =None
+      for i in request.FILES:
+        myFile = request.FILES[i]
+      if myFile:
+        dir = os.path.join(os.path.join(BASE_DIR, 'static'),'profiles')
+        # print(myFile.type)
+        destination = open(os.path.join(dir, generate_unique_id() + myFile.name),
+                  'wb+')
+        for chunk in myFile.chunks():
+          destination.write(chunk)
+        destination.close()
+      return JsonResponse({
+          'code': 200
+      })
+    
+# 根据url返回头像文件
+def downloadAva(request, path):
+    import base64
+    if request.method == 'GET':
+        print(path)
+        dir = os.path.join(os.path.join(BASE_DIR, 'static'),'profiles')
+        file = open(os.path.join(dir, path), 'rb')
+        print(file)
+        result = file.read()
+        return HttpResponse(result, content_type='image/jpeg')
+
+
 # @csrf_exempt
 def test1(request):
     response = {}
