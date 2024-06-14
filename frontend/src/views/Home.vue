@@ -1,7 +1,8 @@
 <template>
   <div>
+    <!-- 这是Home组件 -->
     <el-row :gutter="10" style="margin-bottom: 80px">
-      这是Home组件
+      
       <el-col :span="6">
         <el-card style="color: #409eff">
           <div><i class="el-icon-user-solid" />用户总数</div>

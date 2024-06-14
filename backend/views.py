@@ -41,7 +41,11 @@ def login(request):
             if user:
                 userInfo = UserInfo.objects.filter(user=user).first()
                 reUser = {
+<<<<<<< HEAD
                     "id": userInfo.id,
+=======
+                    "id": user.id,
+>>>>>>> origin/main
                     "username": user.username,
                     "email": user.email,
                     "avatar_url": userInfo.avatar_url
@@ -110,6 +114,7 @@ def register(request):
 def updateUserInfo(request):
     response = {}
     # 除了基本信息还有头像（可以先不考虑）
+<<<<<<< HEAD
     if request.method == "POST":
         # 数据在request.body里
         try:
@@ -228,6 +233,22 @@ def getUserById(request):
 
 # 反馈信息
 
+=======
+
+    return JsonResponse(response)
+
+# 根据用户id获取用户信息 fyt
+def getUserById(request, id):
+    response = {}
+    
+    return JsonResponse(response)
+ 
+# 显示角色列表 fyt
+def showRole(request):
+    response = {}
+    
+    return JsonResponse(response)
+>>>>>>> origin/main
 
 
 # @csrf_exempt

@@ -1,11 +1,11 @@
 <template>
     <div>
-        这是角色组件
+        这是库存管理组件
     </div>
 </template>
 <script>
 export default {
-    name: "Role",
+    name: "Inventory",
     // data(){
 
     // }

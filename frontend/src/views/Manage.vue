@@ -1,6 +1,6 @@
 <template>
     <el-container style="height: 100vh;">
-      这是Manage组件
+      <!-- 这是Manage组件 -->
         <el-aside :width="sideWidth + 'px'" style="background-color: rgb(238, 241, 246); height: 100%;">
             <Aside :isCollapse="isCollapse" :logoTextShow="logoTextShow"/>
         </el-aside>
