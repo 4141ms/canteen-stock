@@ -5,9 +5,6 @@ from backend.models import UserInfo
 
 import json
 
-
-
-
 #创建反馈信息
 def create_feedback(request):
     if request.method == "POST":

@@ -8,7 +8,6 @@ from django.contrib.auth import authenticate
 import json
 import os
 import uuid
-from urllib.parse import unquote
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -107,7 +106,7 @@ def register(request):
                 "msg": '用户创建失败'
             })
 
-# 更新用户信息 fyt
+# 更新用户信息
 def updateUserInfo(request):
     response = {}
     # 除了基本信息还有头像（可以先不考虑）
@@ -175,7 +174,7 @@ def updateUserInfo(request):
             "msg": '仅支持POST请求'
         })
 
-# 根据用户id获取用户信息 fyt
+# 根据用户id获取用户信息
 def getUserById(request):
     response = {}
     if request.method == "POST":

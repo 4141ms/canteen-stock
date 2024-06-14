@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 class Menu(models.Model):
     name = models.CharField(max_length=128)
     price = models.IntegerField()
+    image = models.CharField(max_length=128, default='')
 
 # 角色
 class Role(models.Model):
