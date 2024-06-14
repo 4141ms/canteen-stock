@@ -1,6 +1,6 @@
 <template>
     <el-container style="height: 100vh;">
-      这是Manage组件
+      <!-- 这是Manage组件 -->
         <el-aside :width="sideWidth + 'px'" style="background-color: rgb(238, 241, 246); height: 100%;">
             <Aside :isCollapse="isCollapse" :logoTextShow="logoTextShow"/>
         </el-aside>
@@ -55,7 +55,7 @@ export default {
       let username = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).username : ""
       //从后台获取数据
       this.user = JSON.parse(localStorage.getItem("user"))
-      console.log("Manage:", this.user);
+      // console.log("Manage:", this.user);
       // this.Request.get("/user/username/" + username).then(res => {
       //   //重新赋值后台的最新User数据
       //   this.user = res.data

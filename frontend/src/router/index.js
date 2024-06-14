@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from "@/store";
-import HomeView from '../views/Manage.vue'
 
 Vue.use(VueRouter)
 
@@ -47,7 +46,7 @@ export const setRoutes = () => {
     if (!currentRouteNames.includes('Manage')) {
 
       //拼装动态路由
-      const manageRoute = { path: '/', name: "Manage", component: () => import('../views/Manage.vue'), redirect: "/home", children: [
+      const manageRoute = { path: '/', name: "Manage", component: () => import('../views/Manage.vue'), redirect: '/home', children: [
           { path: 'person', name: '个人信息', component: () => import('../views/Person.vue') },
         ]}
       const menus = JSON.parse(storeMenus)
@@ -69,8 +68,6 @@ export const setRoutes = () => {
       })
       //动态添加到现在的路由对象中去
       router.addRoute(manageRoute)
-      console.log("router.addRoute(manageRoute):" ,manageRoute);
-      console.log("router.getRoutes():", router.getRoutes());
     }
 
   }

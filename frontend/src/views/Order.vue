@@ -2,6 +2,7 @@
     <el-table
       :data="menus"
       style="width: 100%">
+      订餐服务
       <el-table-column
         prop="id"
         label="编号"

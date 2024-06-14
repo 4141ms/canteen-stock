@@ -3,29 +3,29 @@
     <el-form label-width="80px" size="small">
       <el-upload
           class="avatar-uploader"
-          action="http://localhost:9090/file/upload"
+          action="http://localhost:8000/backend/load_ava/"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
       >
-        <img v-if="form.avatarUrl" :src="form.avatarUrl" class="avatar">
+        <img v-if="form.avatar_url" :src="form.avatar_url" class="avatar">
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
 
       <el-form-item label="用户名">
         <el-input v-model="form.username" disabled autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="昵称">
+      <!-- <el-form-item label="昵称">
         <el-input v-model="form.nickname" autocomplete="off"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="邮箱">
         <el-input v-model="form.email" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="电话">
         <el-input v-model="form.phone" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="地址">
+      <!-- <el-form-item label="地址">
         <el-input type="textarea" v-model="form.address" autocomplete="off"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" @click="save">确 定</el-button>
       </el-form-item>
@@ -44,11 +44,15 @@ export default {
     // this.getUser().then(res => {
     //   this.form = res
     // });
+    console.log("user", this.user);
+    this.form = this.user
   },
   methods: {
     // async getUser() {
+      // 保存更新过信息后，需要重新请求一下数据
     //   return (await this.Request.get("/user/username/" + this.user.username)).data
     // },
+
     save() {
       // this.Request.post("/user", this.form).then(res => {
       //   if(res.code === '200') {
@@ -67,7 +71,7 @@ export default {
       // })
     },
     handleAvatarSuccess(res) {
-      this.form.avatarUrl = res;
+      this.form.avatar_url = res;
     }
   }
 }

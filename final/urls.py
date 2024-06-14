@@ -25,4 +25,6 @@ urlpatterns = [
     path("", TemplateView.as_view(template_name="index.html")),
     # path("manual/", views.ManualProjectedView.as_view(), name="manual"),
     path("backend/", include("backend.urls")),
+    path("feedback/", include("feedback.urls")),
+    path("property/", include("property.urls")),
 ]
