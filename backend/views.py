@@ -41,6 +41,7 @@ def login(request):
             if user:
                 userInfo = UserInfo.objects.filter(user=user).first()
                 reUser = {
+                    "id": userInfo.id,
                     "username": user.username,
                     "email": user.email,
                     "avatar_url": userInfo.avatar_url
@@ -105,6 +106,130 @@ def register(request):
                 "msg": '用户创建失败'
             })
 
+# 更新用户信息 fyt
+def updateUserInfo(request):
+    response = {}
+    # 除了基本信息还有头像（可以先不考虑）
+    if request.method == "POST":
+        # 数据在request.body里
+        try:
+            data = request.body.decode("utf-8")
+            json_data = json.loads(data)
+        except json.decoder.JSONDecodeError:
+            return JsonResponse({
+                'code': 403,
+                "msg": '请求数据格式错误'
+            })
+        
+        user_id = json_data.get("id")
+
+        userInfo = UserInfo.objects.get(id=user_id)
+
+        try:
+            userInfo = UserInfo.objects.get(id=user_id)
+        except UserInfo.DoesNotExist:
+            return JsonResponse({
+                'code': 404,
+                "msg": '用户不存在'
+            })
+
+        # user = request.user
+        username = json_data.get("username")
+        email = json_data.get("email")
+        password = json_data.get("password")
+        #头像
+        #avatar_url = json_data.get("avatar_url")
+
+        if username:
+            userInfo.user.username = username
+        if email:
+            userInfo.user.email = email
+        if password:
+            userInfo.user.password = password
+        
+        userInfo.user.save()
+        userInfo.save()
+        
+        userInfo = UserInfo.objects.filter(id=user_id).first()
+        #头像
+        # if avatar_url:
+        #     user_info.avatar_url = avatar_url
+        # user_info.save()
+
+        return JsonResponse({
+            'code': 200,
+            "msg": '用户信息更新成功',
+            "user": {
+                "id": userInfo.id,
+                "username": userInfo.user.username,
+                "email": userInfo.user.email,
+                "password":'******',#不返回密码
+                #头像
+                #"avatar_url": user_info.avatar_url
+            }
+        })
+    else:
+        return JsonResponse({
+            'code': 405,
+            "msg": '仅支持POST请求'
+        })
+
+# 根据用户id获取用户信息 fyt
+def getUserById(request):
+    response = {}
+    if request.method == "POST":
+        try:
+            data = request.body.decode("utf-8")
+            json_data = json.loads(data)
+        except json.decoder.JSONDecodeError:
+            return JsonResponse({
+                'code': 403,
+                "msg": '请求数据格式错误'
+            })
+
+        user_id = json_data.get("id")
+
+        if not user_id:
+            return JsonResponse({
+                'code': 400,
+                "msg": '用户ID未提供'
+            })
+
+        try:
+            userInfo = UserInfo.objects.get(id=user_id)
+        except UserInfo.DoesNotExist:
+            return JsonResponse({
+                'code': 404,
+                "msg": '用户不存在'
+            })
+
+        return JsonResponse({
+            'code': 200,
+            "msg": '用户信息获取成功',
+            "user": {
+                "id": userInfo.id,
+                "username": userInfo.user.username,
+                "email": userInfo.user.email,
+                # 如果有其他需要返回的信息，可以在这里添加,例：头像
+                # "avatar_url": userInfo.avatar_url,
+            }
+        })
+    else:
+        return JsonResponse({
+            'code': 405,
+            "msg": '仅支持POST请求'
+        })
+ 
+# 显示角色列表 fyt
+# def showRole(request):
+#     response = {}
+    
+#     return JsonResponse(response)
+
+# 反馈信息
+
+
+
 # @csrf_exempt
 def test1(request):
     response = {}
@@ -117,3 +242,5 @@ def test1(request):
                 'code': 403,
                 "msg": '测试接口'
             })
+
+
