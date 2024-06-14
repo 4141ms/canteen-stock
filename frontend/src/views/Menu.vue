@@ -67,7 +67,7 @@
       <!-- 动态表单 -->
       <el-form :model="rawFrom" ref="rawFrom" label-width="80px" class="demo-dynamic">
 
-        <el-form-item v-for="(raw, index) in rawFrom.raws" label="原料:" :key="raw.raw_id">
+        <el-form-item v-for="(raw) in rawFrom.raws" label="原料:" :key="raw.raw_id">
           <el-row :gutter="10">
             <el-col :span="10">
               <el-select v-model="raw.name">
@@ -125,7 +125,7 @@ export default {
   methods: {
     getJson: function () {
       let that = this
-      this.Request.get("show_menu/").then(function (ret) {
+      this.Request.get("backend/show_menu/").then(function (ret) {
         //ajax请求发送成功后获取的请求
         that.menus = ret.data.menus;
         return ret.menus;
@@ -141,7 +141,7 @@ export default {
     },
     save: function () {
       console.log("save", this.form);
-      this.Request.post("edit_menu/", this.form).then(res => {
+      this.Request.post("backend/edit_menu/", this.form).then(res => {
         if (res.data.code === 200) {
           this.getJson()
           this.dialogFormVisible = false
@@ -158,7 +158,7 @@ export default {
     },
     del(id) {
       let that = this
-      this.Request.post("del_menu/", id).then(function (res) {
+      this.Request.post("backend/del_menu/", id).then(function (res) {
         if (res.data.code === 200) {
           that.$message.success("删除成功！")
           that.getJson()
@@ -186,7 +186,7 @@ export default {
         return
       }
       let that = this
-      this.Request.post("edit_menu_raw/", form).then(res => {
+      this.Request.post("backend/edit_menu_raw/", form).then(res => {
         if (res.data.code === 200) {
           that.form.raw = res.data.data.raws
           this.$message.success("修改成功！")
@@ -201,7 +201,7 @@ export default {
     },
     removeRaw(item) {
       let that = this
-      this.Request.post("del_menu_raw/", item.raw_id).then(function (res) {
+      this.Request.post("backend/del_menu_raw/", item.raw_id).then(function (res) {
         if (res.data.code === 200) {
           that.$message.success("删除成功！")
           var index = that.rawFrom.raws.indexOf(item)
@@ -228,7 +228,7 @@ export default {
     },
     getRawOption() {
       let that = this
-      this.Request.get("raw_set/").then(function (ret) {
+      this.Request.get("backend/raw_set/").then(function (ret) {
         //ajax请求发送成功后获取的请求
         that.options = ret.data.options;
         return ret.options;

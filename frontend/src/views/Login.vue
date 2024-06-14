@@ -44,7 +44,7 @@ export default {
     login: function () {
       this.$refs['userForm'].validate((valid) => {
         if (valid) {  //表单校验合法
-          this.Request.post("login/", this.user).then(res => {
+          this.Request.post("backend/login/", this.user).then(res => {
             // console.log(res.data)
             if (res.data.code === 200) {
               // store.commit("clear")

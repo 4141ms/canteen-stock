@@ -13,7 +13,7 @@ Vue.config.productionTip = false
 Vue.use(ElementUI, {size:"mini"});
 // 全局注册
 Vue.prototype.$axios = axios
-Vue.prototype.$url = 'http://127.0.0.1:8000/backend/';
+Vue.prototype.$url = 'http://127.0.0.1:8000/';
 Vue.prototype.Request = request
 
 /* eslint-disable no-new */

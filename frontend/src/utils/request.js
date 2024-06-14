@@ -3,7 +3,7 @@ import ElementUI from "element-ui";
 
 // axios.defaults.headers.common['X-CSRF-TOKEN'] = 'token';
 const request = axios.create({
-    baseURL: 'http://127.0.0.1:8000/backend/',
+    baseURL: 'http://127.0.0.1:8000/',
     timeout: 5000
 })
 

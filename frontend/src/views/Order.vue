@@ -36,7 +36,7 @@
     methods: {
         getJson: function (){
             let that = this
-            this.Request.get("show_menu/").then(function(ret){
+            this.Request.get("backend/show_menu/").then(function(ret){
                 //ajax请求发送成功后获取的请求
                     that.menus = ret.data.menus;
                     return ret.menus;
