@@ -44,6 +44,17 @@
         <el-form-item label="价格">
           <el-input v-model="form.price" autocomplete="off" type="number"></el-input>
         </el-form-item>
+      <el-form-item label="图片">
+        <el-upload
+          class="avatar-uploader"
+          action="http://localhost:8000/backend/load_dish/"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+      >
+        <img v-if="form.avatar_url" :src="form.avatar_url" class="avatar">
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </el-upload>
+    </el-form-item>
         <el-form-item label="原料">
           <el-button type="primary" @click="editRaw(form.raw)">编辑</el-button>
           <el-table :data="form.raw" style="width: 100%" row-key="raw_id">
@@ -96,6 +107,7 @@
 
   </div>
 </template>
+
   
 <script>
 export default {
@@ -237,6 +249,9 @@ export default {
         //失败或者异常之后的内容
         console.log(ret)
       })
+    },
+    handleAvatarSuccess(res) {
+      this.form.avatar_url = res;
     }
   },
 
@@ -253,5 +268,32 @@ export default {
 <style>
 .headerBg {
   background-color: #eee !important;
+}
+.avatar-uploader {
+  /* text-align: center; */
+  padding-bottom: 10px;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  /* text-align: center; */
+}
+.avatar {
+  width: 80px;
+  height: 80px;
+  display: block;
 }
 </style>

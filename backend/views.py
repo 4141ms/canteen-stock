@@ -394,6 +394,26 @@ def downloadAva(request, path):
         result = file.read()
         return HttpResponse(result, content_type='image/jpeg')
 
+# 上传菜品图像
+def loadDishImage(request):
+  
+  if request.method == 'POST':
+    if request.FILES:
+      myFile =None
+      for i in request.FILES:
+        myFile = request.FILES[i]
+      if myFile:
+        dir = os.path.join(os.path.join(BASE_DIR, 'static'),'dishes')
+        # print(myFile.type)
+        destination = open(os.path.join(dir, generate_unique_id() + myFile.name),
+                  'wb+')
+        for chunk in myFile.chunks():
+          destination.write(chunk)
+        destination.close()
+      return JsonResponse({
+          'code': 200
+      })
+
 
 # @csrf_exempt
 def test1(request):
