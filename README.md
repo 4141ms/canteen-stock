@@ -1,5 +1,6 @@
 ### 订餐补货管理系统
 前后端分离开发，使用git进行代码托管并协作开发
+项目功能展示: https://www.bilibili.com/
 ### 前端
 - nodejs
 - 框架：vue2 cli+js
