@@ -1,5 +1,6 @@
 ### 订餐补货管理系统
 前后端分离开发，使用git进行代码托管并协作开发
+
 项目功能展示: https://www.bilibili.com/
 ### 前端
 - nodejs
@@ -21,6 +22,6 @@
    - 安装nodejs
    - 执行命令`"npm run dev"`
    - 在浏览器中输入url`"http://localhost:8080/login"`。
-     建议使用管理员账号，如果登录后成功后跳转到404界面，直接再输入url`"http://localhost:8080/"`，主要是路由没调好
+     建议使用管理员账号，如果登录后成功后跳转到404界面，直接再输入url`"http://localhost:8080/"`，路由有问题
 
 
