@@ -1,5 +1,4 @@
 from django.db import models
-from backend.models import Menu, UserInfo
 
 # 供货商
 class Supplier(models.Model):

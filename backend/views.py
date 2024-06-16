@@ -5,6 +5,7 @@ from django.http import JsonResponse, HttpResponse
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
+from property.models import Supplier
 import json
 import os
 import uuid
@@ -455,27 +456,12 @@ def downloadDish(request, path):
 # @csrf_exempt
 def test1(request):
     response = {}
-    o = Order.objects.get(id=1)
-    print(o.time)
-    # print(m2s.stock.name, m2s.number)
-    orders = []
-    index = 0
-    for order in Order.objects.all():
-        index = index + 1
-        print(order.time)
-        tmp = {
-            "id": order.id,
-            "index": index,
-            "username": order.user.user.username,
-            "time": order.time,
-            "total": order.total,
-        }
-        orders.append(tmp)
+    sup = Supplier.objects.create(company_name="21蔬菜供应公司", contact_name="小明", contact_phone="17305890996")
     
     # print
     return JsonResponse({
                 'code': 200,
-                "msg": orders
+                "msg": json.loads(serializers.serialize("json", sup))
             })
 
 

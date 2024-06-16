@@ -18,7 +18,7 @@
             </el-table-column>
             <el-table-column label="操作" width="300" align="center">
                 <template slot-scope="scope">
-                    <el-button type="success" @click="handleEdit(scope.row)">详情 <i class="el-icon-edit"></i></el-button>
+                    <!-- <el-button type="success" @click="handleEdit(scope.row)">详情 <i class="el-icon-edit"></i></el-button> -->
                     <el-popconfirm class="ml-5" confirm-button-text='确定' cancel-button-text='我再想想' icon="el-icon-info"
                         icon-color="red" title="您确定删除吗？" @confirm="del(scope.row.id)">
                         <el-button type="danger" slot="reference">删除 <i class="el-icon-remove-outline"></i></el-button>

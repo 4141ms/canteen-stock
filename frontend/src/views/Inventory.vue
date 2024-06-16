@@ -2,7 +2,7 @@
     <div>
         <div style="margin: 10px 0; display:flex">
             <el-button type="primary" @click="handleAdd">新增</el-button>
-            <el-button type="primary" @click="save">供货商列表</el-button>
+            <el-button type="primary" @click="showSupplier">供货商列表</el-button>
             <download-excel :data='tableData' :fields='json_fields' :name='`${tableDataType}.xlsx`' style="margin-left: 8px;">
                 <el-button type='primary'>导出 采购表</el-button>
             </download-excel>
@@ -67,6 +67,26 @@
             </div>
         </el-dialog>
 
+        <el-dialog title="供货商列表" :visible.sync="dialogSupVisible" width="35%">
+            <el-table :data="shoppers" style="width: 100%" row-key="id">
+                <!-- <el-table-column prop="id" label="编号" width="100">
+                    <template scope="scope"> {{ scope.row.fields.id }}</template>
+                </el-table-column> -->
+                <el-table-column prop="contact_name" label="供货商名" width="100">
+                    <template scope="scope"> {{ scope.row.fields.contact_name }}</template>
+                </el-table-column>
+                <el-table-column prop="company_name" label="公司名" width="100">
+                    <template scope="scope"> {{ scope.row.fields.company_name }}</template>
+                </el-table-column>
+                <el-table-column prop="contact_phone" label="电话" min-width="100">
+                    <template scope="scope"> {{ scope.row.fields.contact_phone }}</template>
+                </el-table-column>
+            </el-table>
+
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogSupVisible = false">关闭</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -75,6 +95,7 @@ export default {
     data() {
         return {
             stocks: [],
+            shoppers: [],
             dialogFormVisible: false,
             form: {},
             threshold: 20,
@@ -89,7 +110,8 @@ export default {
                 原料名: "name", //支持嵌套属性
                 价格: "price",
                 数量:"number"
-            }
+            },
+            dialogSupVisible: false
         }
 
     },
@@ -151,7 +173,21 @@ export default {
                 this.json_fields[e.label] = e.prop;
             });
         },
+        showSupplier() {
+            let that = this
+            this.Request.get("property/suppliers/").then(function (ret) {
+                //ajax请求发送成功后获取的请求
+                that.shoppers = ret.data.suppliers;
+                console.log(ret.data.suppliers);
+                that.dialogSupVisible = true
+                return ret.shoppers;
 
+            }).catch(function (ret) {
+                //失败或者异常之后的内容
+                console.log(ret)
+            })
+            
+        }
     },
     mounted() {
         this.getJson();
