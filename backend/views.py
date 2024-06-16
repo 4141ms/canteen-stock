@@ -456,7 +456,7 @@ def downloadDish(request, path):
 # @csrf_exempt
 def test1(request):
     response = {}
-    sup = Supplier.objects.create(company_name="21蔬菜供应公司", contact_name="小明", contact_phone="17305890996")
+    role = Role.objects.get(id=2)
     
     # print
     return JsonResponse({
