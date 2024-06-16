@@ -40,6 +40,7 @@
 3. 前端启动
    - cd 到frontend目录下
    - 安装nodejs
+   - 执行命令`"npm install"`
    - 执行命令`"npm run dev"`
    - 在浏览器中输入url`"http://localhost:8080/login"`。
      如果登录后成功后跳转到404界面，直接再输入url`"http://localhost:8080/"`
