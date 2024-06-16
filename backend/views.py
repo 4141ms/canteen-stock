@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-from backend.models import Menu, UserInfo, User, Role, SysMenu, Menu2Stock2Number, Stock
+from backend.models import Menu, UserInfo, User, Role, SysMenu, Menu2Stock2Number, Stock, Order
 from django.http import JsonResponse, HttpResponse
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate
 import json
 import os
 import uuid
+import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_URL = "http://127.0.0.1:8000/backend/"
@@ -454,14 +455,27 @@ def downloadDish(request, path):
 # @csrf_exempt
 def test1(request):
     response = {}
-    # m2s = Menu2Stock2Number.objects.get(id=1)
+    o = Order.objects.get(id=1)
+    print(o.time)
     # print(m2s.stock.name, m2s.number)
+    orders = []
+    index = 0
+    for order in Order.objects.all():
+        index = index + 1
+        print(order.time)
+        tmp = {
+            "id": order.id,
+            "index": index,
+            "username": order.user.user.username,
+            "time": order.time,
+            "total": order.total,
+        }
+        orders.append(tmp)
     
-    old_name = "  nasio.jpg".split('.')[-1]
     # print
     return JsonResponse({
                 'code': 200,
-                "msg": old_name
+                "msg": orders
             })
 
 

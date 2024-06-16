@@ -8,6 +8,7 @@ import router from './router'
 import store from "@/store";
 import axios from 'axios'
 import request from "@/utils/request";
+import JsonExcel from 'vue-json-excel';
 
 Vue.config.productionTip = false
 Vue.use(ElementUI, {size:"mini"});
@@ -15,6 +16,10 @@ Vue.use(ElementUI, {size:"mini"});
 Vue.prototype.$axios = axios
 Vue.prototype.$url = 'http://127.0.0.1:8000/';
 Vue.prototype.Request = request
+// 导出Excel文件组件
+
+Vue.component('downloadExcel', JsonExcel)
+
 
 /* eslint-disable no-new */
 new Vue({

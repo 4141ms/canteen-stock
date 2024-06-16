@@ -45,7 +45,7 @@ class Menu2Stock2Number(models.Model):
 # 订单关联表
 class Order(models.Model):
     user = models.ForeignKey("UserInfo", on_delete=models.CASCADE)
-    time = models.TimeField()
+    time = models.CharField(max_length=128)
     total = models.IntegerField(default=0)
  
 # 订单、菜品关联表

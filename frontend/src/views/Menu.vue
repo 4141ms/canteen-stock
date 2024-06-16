@@ -44,18 +44,13 @@
         <el-form-item label="价格">
           <el-input v-model="form.price" autocomplete="off" type="number"></el-input>
         </el-form-item>
-      <el-form-item label="图片" v-if="form.id">
-        <el-upload
-          class="avatar-uploader"
-          action="http://localhost:8000/backend/load_dish/"
-          :data="form"
-          :show-file-list="false"
-          :on-success="handleDishSuccess"
-      >
-        <img v-if="form.image" :src="form.image" class="avatar">
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-      </el-upload>
-    </el-form-item>
+        <el-form-item label="图片" v-if="form.id">
+          <el-upload class="avatar-uploader" action="http://localhost:8000/backend/load_dish/" :data="form"
+            :show-file-list="false" :on-success="handleDishSuccess">
+            <img v-if="form.image" :src="form.image" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
         <el-form-item label="原料">
           <el-button type="primary" @click="editRaw(form.raw)">编辑</el-button>
           <el-table :data="form.raw" style="width: 100%" row-key="raw_id">
@@ -193,8 +188,8 @@ export default {
         id: this.form.id,
         raws: this.rawFrom.raws
       }
-      if (this.form.id ===undefined){
-        this.dialogRawVisible=false
+      if (this.form.id === undefined) {
+        this.dialogRawVisible = false
         this.form.raw = this.rawFrom.raws
         return
       }
@@ -253,7 +248,7 @@ export default {
     },
     handleDishSuccess(res) {
       let id = this.form.id
-      let menu = this.menus.filter((m) => m.id==id)
+      let menu = this.menus.filter((m) => m.id == id)
       menu[0].image = res.url
       this.form.image = res.url;
     }
@@ -273,10 +268,12 @@ export default {
 .headerBg {
   background-color: #eee !important;
 }
+
 .avatar-uploader {
   /* text-align: center; */
   padding-bottom: 10px;
 }
+
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
@@ -284,9 +281,11 @@ export default {
   position: relative;
   overflow: hidden;
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: #409EFF;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -295,6 +294,7 @@ export default {
   line-height: 80px;
   /* text-align: center; */
 }
+
 .avatar {
   width: 80px;
   height: 80px;
