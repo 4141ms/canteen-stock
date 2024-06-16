@@ -44,14 +44,15 @@
         <el-form-item label="价格">
           <el-input v-model="form.price" autocomplete="off" type="number"></el-input>
         </el-form-item>
-      <el-form-item label="图片">
+      <el-form-item label="图片" v-if="form.id">
         <el-upload
           class="avatar-uploader"
           action="http://localhost:8000/backend/load_dish/"
+          :data="form"
           :show-file-list="false"
-          :on-success="handleAvatarSuccess"
+          :on-success="handleDishSuccess"
       >
-        <img v-if="form.avatar_url" :src="form.avatar_url" class="avatar">
+        <img v-if="form.image" :src="form.image" class="avatar">
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
     </el-form-item>
@@ -140,6 +141,7 @@ export default {
       this.Request.get("backend/show_menu/").then(function (ret) {
         //ajax请求发送成功后获取的请求
         that.menus = ret.data.menus;
+        console.log(that.menus);
         return ret.menus;
 
       }).catch(function (ret) {
@@ -152,7 +154,6 @@ export default {
       this.dialogFormVisible = true
     },
     save: function () {
-      console.log("save", this.form);
       this.Request.post("backend/edit_menu/", this.form).then(res => {
         if (res.data.code === 200) {
           this.getJson()
@@ -250,8 +251,11 @@ export default {
         console.log(ret)
       })
     },
-    handleAvatarSuccess(res) {
-      this.form.avatar_url = res;
+    handleDishSuccess(res) {
+      let id = this.form.id
+      let menu = this.menus.filter((m) => m.id==id)
+      menu[0].image = res.url
+      this.form.image = res.url;
     }
   },
 

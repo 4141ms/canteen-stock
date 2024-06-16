@@ -37,6 +37,9 @@ urlpatterns = [#匹配url时，从上往下查找，找到第一个后停止
 
     # 上传菜品图像
     path("load_dish/", views.loadDishImage, name="loadDishImage"),
+    # 获取菜品图片
+    path("download_dish/<str:path>/", views.downloadDish, name="downloadDish"),
+    
     
     
     # 测试接口

@@ -1,5 +1,7 @@
 from django.db import models
+from backend.models import Menu, UserInfo
 
+# 供货商
 class Supplier(models.Model):
     company_name = models.CharField(max_length=255)
     contact_name = models.CharField(max_length=255)
@@ -7,3 +9,4 @@ class Supplier(models.Model):
 
     def __str__(self):
         return self.company_name
+

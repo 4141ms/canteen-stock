@@ -42,3 +42,15 @@ class Menu2Stock2Number(models.Model):
     menu = models.ForeignKey("Menu", on_delete=models.CASCADE)
     stock = models.ForeignKey("Stock", on_delete=models.CASCADE)
 
+# 订单关联表
+class Order(models.Model):
+    user = models.ForeignKey("UserInfo", on_delete=models.CASCADE)
+    time = models.TimeField()
+    total = models.IntegerField(default=0)
+ 
+# 订单、菜品关联表
+class Order2Menu(models.Model):
+    number = models.IntegerField()
+    order = models.ForeignKey("Order", on_delete=models.CASCADE, default='')
+    menu = models.ForeignKey("Menu", on_delete=models.CASCADE)
+
