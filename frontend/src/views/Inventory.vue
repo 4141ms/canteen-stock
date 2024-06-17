@@ -192,6 +192,11 @@ export default {
     mounted() {
         this.getJson();
     },
+    watch:{
+        threshold(){
+            this.tableData = this.stocks.filter((m) => m.number <= this.threshold)
+        }
+    }
 }
 
 </script>
