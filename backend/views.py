@@ -17,7 +17,16 @@ def generate_unique_id():
     return unique_id
 # Create your views here.
 
-# 登录界面
+#展示菜单
+def showMenu(request):
+    response = {}
+
+    menus = Menu.objects.all()
+    response['menus'] = json.loads(serializers.serialize("json", menus))
+    
+    return JsonResponse(response)
+
+# 登录界面(已改phone)
 @csrf_exempt
 def login(request):
     response = {}
@@ -42,6 +51,7 @@ def login(request):
                 reUser = {
                     "id": userInfo.id,
                     "username": user.username,
+                    "phone":userInfo.phone,
                     "email": user.email,
                     "avatar_url": userInfo.avatar_url,
                     'phone': userInfo.phone
@@ -71,7 +81,7 @@ def login(request):
             response["user"] = "fail"
             return JsonResponse(response)
     
-# 注册界面
+# 注册界面(已改phone)
 @csrf_exempt
 def register(request):
     response = {}
@@ -89,12 +99,13 @@ def register(request):
         username = json_data.get("username")
         email = json_data.get("email")
         password = json_data.get("password")
+        phone = json_data.get("phone")
         try:
             user = User.objects.create_user(username=username,email=email,password=password)
             user.save()
             t_role = json_data.get("role")
             role = Role.objects.filter(flag=t_role).first()
-            userInfo = UserInfo(user=user, role=role)
+            userInfo = UserInfo(user=user, role=role,phone=phone)
             userInfo.save()
             return JsonResponse({
                 'code': 200,
@@ -106,7 +117,7 @@ def register(request):
                 "msg": '用户创建失败'
             })
 
-# 更新用户信息
+# 更新用户信息(已加phone) fyt
 def updateUserInfo(request):
     response = {}
     # 除了基本信息还有头像（可以先不考虑）
@@ -137,6 +148,7 @@ def updateUserInfo(request):
         username = json_data.get("username")
         email = json_data.get("email")
         password = json_data.get("password")
+        phone = json_data.get("phone")
         #头像
         #avatar_url = json_data.get("avatar_url")
 
@@ -146,6 +158,8 @@ def updateUserInfo(request):
             userInfo.user.email = email
         if password:
             userInfo.user.password = password
+        if phone:
+            userInfo.phone = phone
         
         userInfo.user.save()
         userInfo.save()
@@ -162,6 +176,7 @@ def updateUserInfo(request):
             "user": {
                 "id": userInfo.id,
                 "username": userInfo.user.username,
+                "phone":userInfo.phone,
                 "email": userInfo.user.email,
                 "password":'******',#不返回密码
                 #头像
@@ -174,7 +189,7 @@ def updateUserInfo(request):
             "msg": '仅支持POST请求'
         })
 
-# 根据用户id获取用户信息
+# 根据用户id获取用户信息(已改phone) fyt
 def getUserById(request):
     response = {}
     if request.method == "POST":
@@ -209,6 +224,7 @@ def getUserById(request):
             "user": {
                 "id": userInfo.id,
                 "username": userInfo.user.username,
+                "phone":userInfo.phone,
                 "email": userInfo.user.email,
                 # 如果有其他需要返回的信息，可以在这里添加,例：头像
                 # "avatar_url": userInfo.avatar_url,
@@ -344,55 +360,8 @@ def editMenu(request):
                     "msg": '菜单修改成功'
                 })
 
-# 删除菜单
-def delMenu(request):
-    if request.method == "POST":
-        try:
-            data = request.body.decode("utf-8")
-            json_data = json.loads(data)
-            
-        except:
-            return JsonResponse({
-                'code': 403,
-                "msg": '删除失败'
-            })
-        menu = Menu.objects.get(id=json_data)
-        menu.delete()
-        return JsonResponse({
-            'code': 200,
-            "msg": '删除成功'
-        })
-    
-# 上传图片
-def getUserProfiles(request):
-  
-  if request.method == 'POST':
-    if request.FILES:
-      myFile =None
-      for i in request.FILES:
-        myFile = request.FILES[i]
-      if myFile:
-        dir = os.path.join(os.path.join(BASE_DIR, 'static'),'profiles')
-        # print(myFile.type)
-        destination = open(os.path.join(dir, generate_unique_id() + myFile.name),
-                  'wb+')
-        for chunk in myFile.chunks():
-          destination.write(chunk)
-        destination.close()
-      return JsonResponse({
-          'code': 200
-      })
-    
-# 根据url返回头像文件
-def downloadAva(request, path):
-    import base64
-    if request.method == 'GET':
-        print(path)
-        dir = os.path.join(os.path.join(BASE_DIR, 'static'),'profiles')
-        file = open(os.path.join(dir, path), 'rb')
-        print(file)
-        result = file.read()
-        return HttpResponse(result, content_type='image/jpeg')
+# 反馈信息
+
 
 
 # @csrf_exempt

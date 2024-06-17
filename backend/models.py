@@ -29,16 +29,4 @@ class UserInfo(models.Model):
     role = models.ForeignKey("Role", on_delete=models.CASCADE)
     phone = models.CharField(max_length=128, default='')
     avatar_url = models.CharField(max_length=128)
-
-# 库存信息
-class Stock(models.Model):
-    name = models.CharField(max_length=128)
-    number = models.IntegerField()
-    price = models.IntegerField()
-
-# 菜品、库存数量关联表
-class Menu2Stock2Number(models.Model):
-    number = models.IntegerField()
-    menu = models.ForeignKey("Menu", on_delete=models.CASCADE)
-    stock = models.ForeignKey("Stock", on_delete=models.CASCADE)
-
+    phone = models.CharField(max_length=15, blank=True, null=True)  # 新增电话字段
