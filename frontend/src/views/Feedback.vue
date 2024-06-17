@@ -42,10 +42,23 @@ export default {
         }
     },
     methods: {
+        getJson: function () {
+            let that = this
+            this.Request.get("/feedback/feedback_list/").then(function (ret) {
+                //ajax请求发送成功后获取的请求
+                that.feedbacks = ret.data.feedbacks;
+                console.log(that.feedbacks);
+                return ret.feedbacks;
+
+            }).catch(function (ret) {
+                //失败或者异常之后的内容
+                console.log(ret)
+            })
+        },
         // 新增评论
         create: function () {
             let that = this
-            this.Request.get("create_feedback/").then(function (ret) {
+            this.Request.get("/feedback/create_feedback/").then(function (ret) {
                 //ajax请求发送成功后获取的请求
                 that.feedbacks = ret.data.feedbacks;
                 return ret.feedbacks;
@@ -55,13 +68,17 @@ export default {
                 console.log(ret)
             })
         },
+        handleEdit(row) {
+            this.form = Object.assign({}, row)
+            this.dialogFormVisible = true
+        },
         handleAdd: function () {
             this.form = {}
             this.dialogFormVisible = true
         },
         // 编辑评论
         edit_feedback() {
-            this.Request.post("edit_feedback/", this.form).then(res => {
+            this.Request.post("/feedback/update_feedback/", this.form).then(res => {
                 if (res.data.code === 200) {
                 this.getJson()
                 this.dialogFormVisible = false
@@ -74,7 +91,7 @@ export default {
         // 删除评论
         del_feedback(feedback_id) {
             let that = this
-            this.Request.post("delete_feedback/", feedback_id).then(function (res) {
+            this.Request.post("/feedback/delete_feedback/", feedback_id).then(function (res) {
                 if (res.data.code === 200) {
                 that.$message.success("删除成功！")
                 that.getJson()
