@@ -78,9 +78,11 @@ export default {
             this.$message.error("两次输入的密码不一致")
             return false
           }
-          this.Request.post("register/", this.user).then(res => {
-            if(res.code === '200') {
+          this.Request.post("backend/register/", this.user).then(res => {
+            console.log(res);
+            if(res.data.code === 200) {
               this.$message.success("注册成功")
+              this.$router.push("/login")
             } else {
               this.$message.error(res.msg)
             }

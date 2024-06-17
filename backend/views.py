@@ -1,15 +1,18 @@
 from django.shortcuts import render
 from django.views import View
-from backend.models import Menu, UserInfo, User, Role, SysMenu, Menu2Stock2Number, Stock
+from backend.models import Menu, UserInfo, User, Role, SysMenu, Menu2Stock2Number, Stock, Order
 from django.http import JsonResponse, HttpResponse
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
+from property.models import Supplier
 import json
 import os
 import uuid
+import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_URL = "http://127.0.0.1:8000/backend/"
 
 # 生成8位uuid
 def generate_unique_id():
@@ -258,7 +261,8 @@ def showMenu(request):
                 "index": index,
                 "name": menu.name,
                 "price": menu.price,
-                "raw": raws
+                "raw": raws,
+                "image": menu.image
             }
         menus.append(tmp)
     response['menus'] = menus
@@ -363,15 +367,71 @@ def editMenu(request):
 # 反馈信息
 
 
+# 上传菜品图像
+def loadDishImage(request):
+  
+  if request.method == 'POST':
+    menu_id = request.POST.get('id')
+    menu = Menu.objects.get(id=menu_id)
+    if request.FILES:
+      myFile =None
+      for i in request.FILES:
+        myFile = request.FILES[i]
+      if myFile:
+        dir = os.path.join(os.path.join(BASE_DIR, 'static'),'dishes')
+        name = generate_unique_id()+ "-" + menu.name + "." + myFile.name.split('.')[-1]
+        dish_path = os.path.join(dir, name)
+        url = BASE_URL + 'download_dish/' + name
+        print(url)
+
+        # 删除原本的dish图像
+        if menu.image != '':
+            try: 
+                old_name = menu.image.split('/')[-1]
+                old_path = os.path.join(dir, old_name)
+                os.remove(old_path)
+            except:
+                print("删除旧图像出错")
+                return JsonResponse({
+                    'code': 400,
+                    "msg": "删除旧图像出错"
+                })
+
+        
+        destination = open(dish_path, 'wb+')
+        for chunk in myFile.chunks():
+            destination.write(chunk)
+        destination.close()
+
+        # 更新图像
+        menu.image = url
+        menu.save()
+        return JsonResponse({
+            'code': 200,
+            "url": url
+        })
+
+# 根据url返回头像文件
+def downloadDish(request, path):
+    import base64
+    if request.method == 'GET':
+        print(path)
+        dir = os.path.join(os.path.join(BASE_DIR, 'static'),'dishes')
+        file = open(os.path.join(dir, path), 'rb')
+        print(file)
+        result = file.read()
+        return HttpResponse(result, content_type='image/jpeg')
 
 # @csrf_exempt
 def test1(request):
     response = {}
-    m2s = Menu2Stock2Number.objects.get(id=1)
-    print(m2s.stock.name, m2s.number)
+    sup = Supplier.objects.create(company_name="光明蔬菜供给有限公司",contact_name="李四", contact_phone="17078123451")
+    # sup.delete()
+    
+    # print
     return JsonResponse({
                 'code': 200,
-                "msg": '测试接口'
+                # "msg": json.loads(serializers.serialize("json", sup))
             })
 
 

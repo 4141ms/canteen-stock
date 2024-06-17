@@ -44,6 +44,13 @@
         <el-form-item label="价格">
           <el-input v-model="form.price" autocomplete="off" type="number"></el-input>
         </el-form-item>
+        <el-form-item label="图片" v-if="form.id">
+          <el-upload class="avatar-uploader" action="http://localhost:8000/backend/load_dish/" :data="form"
+            :show-file-list="false" :on-success="handleDishSuccess">
+            <img v-if="form.image" :src="form.image" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
         <el-form-item label="原料">
           <el-button type="primary" @click="editRaw(form.raw)">编辑</el-button>
           <el-table :data="form.raw" style="width: 100%" row-key="raw_id">
@@ -67,7 +74,7 @@
       <!-- 动态表单 -->
       <el-form :model="rawFrom" ref="rawFrom" label-width="80px" class="demo-dynamic">
 
-        <el-form-item v-for="(raw, index) in rawFrom.raws" label="原料:" :key="raw.raw_id">
+        <el-form-item v-for="(raw) in rawFrom.raws" label="原料:" :key="raw.raw_id">
           <el-row :gutter="10">
             <el-col :span="10">
               <el-select v-model="raw.name">
@@ -96,6 +103,7 @@
 
   </div>
 </template>
+
   
 <script>
 export default {
@@ -125,9 +133,10 @@ export default {
   methods: {
     getJson: function () {
       let that = this
-      this.Request.get("show_menu/").then(function (ret) {
+      this.Request.get("backend/show_menu/").then(function (ret) {
         //ajax请求发送成功后获取的请求
         that.menus = ret.data.menus;
+        console.log(that.menus);
         return ret.menus;
 
       }).catch(function (ret) {
@@ -140,8 +149,7 @@ export default {
       this.dialogFormVisible = true
     },
     save: function () {
-      console.log("save", this.form);
-      this.Request.post("edit_menu/", this.form).then(res => {
+      this.Request.post("backend/edit_menu/", this.form).then(res => {
         if (res.data.code === 200) {
           this.getJson()
           this.dialogFormVisible = false
@@ -158,7 +166,7 @@ export default {
     },
     del(id) {
       let that = this
-      this.Request.post("del_menu/", id).then(function (res) {
+      this.Request.post("backend/del_menu/", id).then(function (res) {
         if (res.data.code === 200) {
           that.$message.success("删除成功！")
           that.getJson()
@@ -180,13 +188,13 @@ export default {
         id: this.form.id,
         raws: this.rawFrom.raws
       }
-      if (this.form.id ===undefined){
-        this.dialogRawVisible=false
+      if (this.form.id === undefined) {
+        this.dialogRawVisible = false
         this.form.raw = this.rawFrom.raws
         return
       }
       let that = this
-      this.Request.post("edit_menu_raw/", form).then(res => {
+      this.Request.post("backend/edit_menu_raw/", form).then(res => {
         if (res.data.code === 200) {
           that.form.raw = res.data.data.raws
           this.$message.success("修改成功！")
@@ -201,7 +209,7 @@ export default {
     },
     removeRaw(item) {
       let that = this
-      this.Request.post("del_menu_raw/", item.raw_id).then(function (res) {
+      this.Request.post("backend/del_menu_raw/", item.raw_id).then(function (res) {
         if (res.data.code === 200) {
           that.$message.success("删除成功！")
           var index = that.rawFrom.raws.indexOf(item)
@@ -228,7 +236,7 @@ export default {
     },
     getRawOption() {
       let that = this
-      this.Request.get("raw_set/").then(function (ret) {
+      this.Request.get("backend/raw_set/").then(function (ret) {
         //ajax请求发送成功后获取的请求
         that.options = ret.data.options;
         return ret.options;
@@ -237,6 +245,12 @@ export default {
         //失败或者异常之后的内容
         console.log(ret)
       })
+    },
+    handleDishSuccess(res) {
+      let id = this.form.id
+      let menu = this.menus.filter((m) => m.id == id)
+      menu[0].image = res.url
+      this.form.image = res.url;
     }
   },
 
@@ -253,5 +267,37 @@ export default {
 <style>
 .headerBg {
   background-color: #eee !important;
+}
+
+.avatar-uploader {
+  /* text-align: center; */
+  padding-bottom: 10px;
+}
+
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  /* text-align: center; */
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  display: block;
 }
 </style>

@@ -1,6 +1,7 @@
 <template>
     <div class="wrapper">
       <div style="margin: 200px auto; background-color: #fff; width: 350px; height: 300px; padding: 20px; border-radius: 10px">
+        
         <div style="margin: 20px 0; text-align: center; font-size: 24px;"><b>登录</b></div>
         <el-form :model="user" :rules="rules" ref="userForm">
           <!-- {% csrf_token %} -->
@@ -44,7 +45,7 @@ export default {
     login: function () {
       this.$refs['userForm'].validate((valid) => {
         if (valid) {  //表单校验合法
-          this.Request.post("login/", this.user).then(res => {
+          this.Request.post("backend/login/", this.user).then(res => {
             // console.log(res.data)
             if (res.data.code === 200) {
               // store.commit("clear")
