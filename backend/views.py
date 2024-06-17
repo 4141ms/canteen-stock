@@ -18,7 +18,7 @@ def showMenu(request):
     
     return JsonResponse(response)
 
-# 登录界面
+# 登录界面(已改phone)
 @csrf_exempt
 def login(request):
     response = {}
@@ -43,6 +43,7 @@ def login(request):
                 reUser = {
                     "id": userInfo.id,
                     "username": user.username,
+                    "phone":userInfo.phone,
                     "email": user.email,
                     "avatar_url": userInfo.avatar_url
                 }
@@ -71,7 +72,7 @@ def login(request):
             response["user"] = "fail"
             return JsonResponse(response)
     
-# 注册界面
+# 注册界面(已改phone)
 @csrf_exempt
 def register(request):
     response = {}
@@ -89,12 +90,13 @@ def register(request):
         username = json_data.get("username")
         email = json_data.get("email")
         password = json_data.get("password")
+        phone = json_data.get("phone")
         try:
             user = User.objects.create_user(username=username,email=email,password=password)
             user.save()
             t_role = json_data.get("role")
             role = Role.objects.filter(flag=t_role).first()
-            userInfo = UserInfo(user=user, role=role)
+            userInfo = UserInfo(user=user, role=role,phone=phone)
             userInfo.save()
             return JsonResponse({
                 'code': 200,
@@ -106,7 +108,7 @@ def register(request):
                 "msg": '用户创建失败'
             })
 
-# 更新用户信息 fyt
+# 更新用户信息(已加phone) fyt
 def updateUserInfo(request):
     response = {}
     # 除了基本信息还有头像（可以先不考虑）
@@ -137,6 +139,7 @@ def updateUserInfo(request):
         username = json_data.get("username")
         email = json_data.get("email")
         password = json_data.get("password")
+        phone = json_data.get("phone")
         #头像
         #avatar_url = json_data.get("avatar_url")
 
@@ -146,6 +149,8 @@ def updateUserInfo(request):
             userInfo.user.email = email
         if password:
             userInfo.user.password = password
+        if phone:
+            userInfo.phone = phone
         
         userInfo.user.save()
         userInfo.save()
@@ -162,6 +167,7 @@ def updateUserInfo(request):
             "user": {
                 "id": userInfo.id,
                 "username": userInfo.user.username,
+                "phone":userInfo.phone,
                 "email": userInfo.user.email,
                 "password":'******',#不返回密码
                 #头像
@@ -174,7 +180,7 @@ def updateUserInfo(request):
             "msg": '仅支持POST请求'
         })
 
-# 根据用户id获取用户信息 fyt
+# 根据用户id获取用户信息(已改phone) fyt
 def getUserById(request):
     response = {}
     if request.method == "POST":
@@ -209,6 +215,7 @@ def getUserById(request):
             "user": {
                 "id": userInfo.id,
                 "username": userInfo.user.username,
+                "phone":userInfo.phone,
                 "email": userInfo.user.email,
                 # 如果有其他需要返回的信息，可以在这里添加,例：头像
                 # "avatar_url": userInfo.avatar_url,

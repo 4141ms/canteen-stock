@@ -27,3 +27,4 @@ class UserInfo(models.Model):
     # 对应角色表里的flag
     role = models.ForeignKey("Role", on_delete=models.CASCADE)
     avatar_url = models.CharField(max_length=128)
+    phone = models.CharField(max_length=15, blank=True, null=True)  # 新增电话字段
