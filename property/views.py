@@ -57,8 +57,6 @@ def createOrderSet(request):
             order.total = sum
             order.save()
             
-            
-            
         except:
             return JsonResponse({
                 "code": 403,
