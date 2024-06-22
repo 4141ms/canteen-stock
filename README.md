@@ -38,8 +38,9 @@
    - 安装node.js，我的版本是 v14.18.2，参考教程：https://blog.csdn.net/qq_42006801/article/details/124830995
 2. 将项目下载或clone到本地
 3. 后端启动
+   - 激活安装了django的环境
    - 在主目录下执行`"python manage.py runserver"`
-4. 前端启动
+5. 前端启动
    - cd 到frontend目录下
    - 执行命令`"npm install"`
    - 执行命令`"npm run dev"`
