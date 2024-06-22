@@ -12,6 +12,7 @@ def feedback_list(request):
 
     # 获取所有反馈信息
     feedbacks = Feedback.objects.all()
+    print("here:::::",feedbacks)
     response['feedbacks'] = json.loads(serializers.serialize("json", feedbacks))
     
     return JsonResponse(response)
