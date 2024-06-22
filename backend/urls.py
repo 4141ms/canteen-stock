@@ -40,6 +40,15 @@ urlpatterns = [#匹配url时，从上往下查找，找到第一个后停止
     # 获取菜品图片
     path("download_dish/<str:path>/", views.downloadDish, name="downloadDish"),
     
+    # 图表：返回库存数据
+    path("stock_map_data/", views.stockMapData, name="stockMapData"),
+    # 图表：返回季度营业额数据
+    path("turnover_map_data/", views.turnoverMapData, name="turnoverMapData"),
+   
+    # 图表：返回菜品数据
+    path("dish_map_data/", views.dishMapData, name="dishMapData"),
+   
+    
     
     
     # 测试接口

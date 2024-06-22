@@ -55,7 +55,7 @@ import * as echarts from 'echarts'
 export default {
   name: "Home",
   data: () => ({
-    userNum: 100,
+    userNum: 8,
     adminNum: 5,
     cusNum: 5,
     roleNum: 2,
@@ -127,7 +127,7 @@ export default {
     //饼图
     var pieOption = {
       title: {
-        text: '菜品占比图',
+        text: '库存余量图',
         subtext: '比例图',
         left: 'center'
       },
@@ -158,11 +158,11 @@ export default {
             },
           },
           data: [   //填空
-            // { value: 1048, name: 'Search Engine' },
-            // { value: 735, name: 'Direct' },
-            // { value: 580, name: 'Email' },
-            // { value: 484, name: 'Union Ads' },
-            // { value: 300, name: 'Video Ads' }
+            { value: 1048, name: 'Search Engine' },
+            { value: 735, name: 'Direct' },
+            { value: 580, name: 'Email' },
+            { value: 484, name: 'Union Ads' },
+            { value: 300, name: 'Video Ads' }
           ],
           emphasis: {
             itemStyle: {
@@ -175,9 +175,9 @@ export default {
       ]
     };
 
-    var pieUserOption = {
+    var pieTurnover = {
       title: {
-        text: '库存占比统计',
+        text: '营业额占比统计',
         subtext: '比例图',
         left: 'right'
       },
@@ -191,7 +191,7 @@ export default {
       },
       series: [
         {
-          name: "原料详情",
+          name: "营业额",
           type: 'pie',
           radius: '50%',
           center: ['70%', '50%'],
@@ -208,10 +208,10 @@ export default {
             },
           },
           data: [   //填空
-            // {name: "第一季度", value: 5},
-            // {name: "第二季度", value: 6},
-            // {name: "第三季度", value: 7},
-            // {name: "第四季度", value: 8},
+            {name: "第一季度", value: 5},
+            {name: "第二季度", value: 6},
+            {name: "第三季度", value: 7},
+            {name: "第四季度", value: 8},
           ],
           emphasis: {
             itemStyle: {
@@ -246,34 +246,24 @@ export default {
   //   //   }
   //   // })
 
-  //   // this.Request.get("/echarts/members").then(res => {
-
-  //   //   // console.log(res.data)
-  //   //   //填空
-  //   //   option.xAxis.data = res.data["xlabel"]
-  //   //   option.series[0].data = res.data["xdata"]
-  //   //   // //在数据准备完毕之后再set
-  //   //   myChart.setOption(option)
-
-  //   //   pieOption.series[0].data = res.data["pieData"]
-
+    this.Request.get("/backend/stock_map_data").then(res => {
+      pieOption.series[0].data = res.data["pieData"]
       pieChart.setOption(pieOption)
-  //   // })
+    })
 
-  //   // this.Request.get("/echarts/times").then(res => {
-  //   //   console.log(res.data)
-  //   // })
+    this.Request.get("/backend/turnover_map_data").then(res => {
+      console.log(res.data)
+      pieTurnover.series[0].data = res.data["turnover"]
+      pieUserChart.setOption(pieTurnover)
+    })
 
-  //   pieChart.on('click', params => {
-  //     let name = params.data.name
-  //     console.log(name)
-  //     // this.Request.get("/echarts/username/" + name).then( res =>{
-  //     //   pieUserOption.series[0].data = res.data
-  //     //   pieUserOption.title.text = "用户 " + name + " 的访问量占比统计"
-        pieUserChart.setOption(pieUserOption)
-  //     // })
+    this.Request.get("/backend/dish_map_data").then(res => {
+      console.log(res.data)
+      option.xAxis.data = res.data["xlabel"]
+      option.series[0].data = res.data["xdata"]
+      myChart.setOption(option)
+    })
 
-  //   })
   }
 }
 </script>

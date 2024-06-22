@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-from backend.models import Menu, UserInfo, User, Role, SysMenu, Menu2Stock2Number, Stock, Order
+from backend.models import Menu, UserInfo, User, Role, Order2Menu, Menu2Stock2Number, Stock, Order
 from django.http import JsonResponse, HttpResponse
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
@@ -10,6 +10,7 @@ import json
 import os
 import uuid
 import datetime
+from django.db.models.functions import ExtractQuarter
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_URL = "http://127.0.0.1:8000/backend/"
@@ -453,16 +454,85 @@ def downloadDish(request, path):
         result = file.read()
         return HttpResponse(result, content_type='image/jpeg')
 
+# echarts 返回库存信息
+def stockMapData(request):
+    response = {}
+
+    pieData = []
+    index = 0
+    for raw in Stock.objects.order_by("number"):
+        index = index+1
+        if index == 6: break
+        pieData.append({
+            "name": raw.name,
+            "value": raw.number
+        })
+    response["pieData"] = pieData
+    return JsonResponse(response)
+
+
+# echarts 返回季度营业额
+def turnoverMapData(request):
+    response = {}
+    q1 = 0
+    q2 = 0
+    q3 = 0
+    q4 = 0
+    for order in Order.objects.all():
+        mouth = datetime.datetime.strptime(order.time, "%Y-%m-%d %H:%M:%S").month
+        quarter = (mouth - 1) // 3 + 1  
+        if quarter == 1:
+            q1 = q1 + order.total
+        elif quarter == 2:
+            q2 = q2 + order.total
+        elif quarter == 3:
+            q3 = q3 + order.total
+        elif quarter == 4:
+            q4 = q4 + order.total
+    res = []
+    title = ["第一季度", "第二季度" , "第三季度", "第四季度"]
+    for i, n in enumerate([q1, q2, q3, q4]):
+        res.append({
+            "name": title[i],
+            "value": n
+        })
+        
+    response["turnover"] = res
+    return JsonResponse(response)
+
+# echarts 菜品下单数
+def dishMapData(request):
+    from django.db.models import Count 
+    response = {}
+    
+    menu_counts = Order2Menu.objects.values('menu__name')  # 使用menu__name是因为我们在查询Order2Menu，但想根据Menu的name分组  
+    menu_counts = menu_counts.annotate(count=Count('menu'))  # 对每个menu进行计数  
+    menu_counts = menu_counts.order_by('-count')[:5]  # 按计数降序排列，并取前5个 
+        
+    # menu_counts现在是一个QuerySet，其中包含了menu的name和对应的计数，按计数降序排列  
+    # 遍历获取结果  
+    index = 0
+    # res = []
+    xlabel = []
+    xdata = []
+    for menu_count in menu_counts:  
+        index = index + 1
+        if index >= 6: break
+        xlabel.append(menu_count['menu__name'])
+        xdata.append(menu_count['count'])
+        
+    
+    response["xlabel"] = xlabel
+    response['xdata'] = xdata
+    return JsonResponse(response)
+    
+
 # @csrf_exempt
 def test1(request):
     response = {}
-    sup = Supplier.objects.create(company_name="光明蔬菜供给有限公司",contact_name="李四", contact_phone="17078123451")
-    # sup.delete()
-    
-    # print
-    return JsonResponse({
-                'code': 200,
-                # "msg": json.loads(serializers.serialize("json", sup))
-            })
+    # data = datetime.strptime("2024-06-16 20:39:01", "%Y-%m-%d %H:%M:%S")
+
+    # print(data)
+    return JsonResponse(response)
 
 
