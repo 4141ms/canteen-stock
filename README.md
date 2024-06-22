@@ -33,16 +33,14 @@
 - 数据库: django自带的splite
 
 ### 项目启动方法
-1. 将项目下载或clone到本地
-2. 后端启动
+1. 环境安装：
    - 安装django环境
+   - 安装node.js，我的版本是 v14.18.2，参考教程：https://blog.csdn.net/qq_42006801/article/details/124830995
+2. 将项目下载或clone到本地
+3. 后端启动
    - 在主目录下执行`"python manage.py runserver"`
-3. 前端启动
+4. 前端启动
    - cd 到frontend目录下
-   - 安装nodejs
    - 执行命令`"npm install"`
    - 执行命令`"npm run dev"`
    - 在浏览器中输入url`"http://localhost:8080/login"`。
-     如果登录后成功后跳转到404界面，直接再输入url`"http://localhost:8080/"`
-
-
