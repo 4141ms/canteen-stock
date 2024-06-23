@@ -8,4 +8,6 @@ urlpatterns = [#匹配url时，从上往下查找，找到第一个后停止
     path("delete_feedback/", views.delete_feedback, name="delete_feedback"),
     #修改反馈信息
     path("update_feedback/", views.update_feedback, name="update_feedback"),
+    #展示所有反馈信息
+    path("feedback_list/", views.feedback_list, name="feedback_list"),
 ]
