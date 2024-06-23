@@ -2,8 +2,21 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from feedback.models import Feedback
 from backend.models import UserInfo
+from django.core import serializers
 
 import json
+
+#展示现有反馈信息
+def feedback_list(request):
+    response = {}
+
+    # 获取所有反馈信息
+    feedbacks = Feedback.objects.all()
+    print("here:::::",feedbacks)
+    response['feedbacks'] = json.loads(serializers.serialize("json", feedbacks))
+    
+    return JsonResponse(response)
+
 
 #创建反馈信息
 def create_feedback(request):
